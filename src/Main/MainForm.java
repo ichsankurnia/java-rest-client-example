@@ -5,7 +5,13 @@
  */
 package Main;
 
+import java.io.IOException;
+import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import org.json.JSONException;
+import org.json.JSONObject;
 /**
  *
  * @author user
@@ -15,6 +21,9 @@ public class MainForm extends javax.swing.JFrame {
     /**
      * Creates new form MainForm
      */
+    
+    ClassApi api = new ClassApi();
+    
     public MainForm() {
         initComponents();
     }
@@ -40,14 +49,17 @@ public class MainForm extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         rbtnAuthorization = new javax.swing.JRadioButton();
-        jLabel5 = new javax.swing.JLabel();
+        lblBeautify = new javax.swing.JLabel();
         jScrollPane4 = new javax.swing.JScrollPane();
         txtResponse = new javax.swing.JTextArea();
+        lblStatus = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Rest Client Apps");
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        setPreferredSize(new java.awt.Dimension(1400, 700));
+        setForeground(new java.awt.Color(60, 63, 65));
+        setPreferredSize(new java.awt.Dimension(1360, 700));
+        setResizable(false);
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosed(java.awt.event.WindowEvent evt) {
                 formWindowClosed(evt);
@@ -61,19 +73,33 @@ public class MainForm extends javax.swing.JFrame {
         jLabel1.setText("Rest Client");
 
         txtUrl.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        txtUrl.setAlignmentX(2.0F);
 
         cbMethod.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         cbMethod.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "GET", "POST", "PATCH", "DELETE" }));
 
         btnSend.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         btnSend.setText("Send");
+        btnSend.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSendActionPerformed(evt);
+            }
+        });
 
         txtToken.setColumns(20);
         txtToken.setRows(5);
         jScrollPane2.setViewportView(txtToken);
 
         txtRequest.setColumns(20);
+        txtRequest.setLineWrap(true);
         txtRequest.setRows(5);
+        txtRequest.setTabSize(2);
+        txtRequest.setWrapStyleWord(true);
+        txtRequest.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtRequestKeyPressed(evt);
+            }
+        });
         jScrollPane3.setViewportView(txtRequest);
 
         jLabel2.setText("Bearer Token");
@@ -84,14 +110,25 @@ public class MainForm extends javax.swing.JFrame {
 
         rbtnAuthorization.setText("Authorization");
 
-        jLabel5.setFont(new java.awt.Font("Dialog", 3, 12)); // NOI18N
-        jLabel5.setText("Beautify");
-        jLabel5.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        lblBeautify.setFont(new java.awt.Font("Dialog", 3, 12)); // NOI18N
+        lblBeautify.setText("Beautify");
+        lblBeautify.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        lblBeautify.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                lblBeautifyMouseReleased(evt);
+            }
+        });
 
         txtResponse.setEditable(false);
         txtResponse.setColumns(20);
+        txtResponse.setLineWrap(true);
         txtResponse.setRows(5);
+        txtResponse.setWrapStyleWord(true);
         jScrollPane4.setViewportView(txtResponse);
+
+        lblStatus.setFont(new java.awt.Font("Dialog", 3, 11)); // NOI18N
+        lblStatus.setText("  ");
+        lblStatus.setToolTipText("");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -100,37 +137,40 @@ public class MainForm extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(141, 141, 141)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                        .addComponent(jLabel2)
-                                        .addComponent(rbtnAuthorization))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGap(30, 30, 30)
-                                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 281, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addGap(54, 54, 54)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(jLabel3)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(jLabel5))
-                                    .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 328, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(54, 54, 54)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel4)
-                                    .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 328, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(cbMethod, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(txtUrl, javax.swing.GroupLayout.PREFERRED_SIZE, 801, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(btnSend, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                    .addGroup(layout.createSequentialGroup()
                         .addGap(61, 61, 61)
-                        .addComponent(jLabel1)))
-                .addContainerGap(457, Short.MAX_VALUE))
+                        .addComponent(jLabel1))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                            .addGap(110, 110, 110)
+                            .addComponent(cbMethod, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(txtUrl)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(btnSend, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                            .addGap(76, 76, 76)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel2)
+                                    .addComponent(rbtnAuthorization))
+                                .addGroup(layout.createSequentialGroup()
+                                    .addGap(30, 30, 30)
+                                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 281, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGap(54, 54, 54)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 375, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addComponent(jLabel3)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(lblBeautify)))
+                            .addGap(68, 68, 68)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addComponent(jLabel4)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(lblStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 390, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                .addContainerGap(399, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -152,17 +192,19 @@ public class MainForm extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel3)
-                            .addComponent(jLabel5)
+                            .addComponent(lblBeautify)
                             .addComponent(rbtnAuthorization)
-                            .addComponent(jLabel4))
+                            .addComponent(jLabel4)
+                            .addComponent(lblStatus))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jScrollPane3)
-                            .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 441, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(50, Short.MAX_VALUE))
+                            .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 466, Short.MAX_VALUE)
+                            .addComponent(jScrollPane3))))
+                .addContainerGap(25, Short.MAX_VALUE))
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
@@ -181,6 +223,39 @@ public class MainForm extends javax.swing.JFrame {
             System.exit(0);
         }
     }//GEN-LAST:event_formWindowClosing
+
+    private void btnSendActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSendActionPerformed
+        String method = (String)cbMethod.getSelectedItem();
+        String url = txtUrl.getText();
+        String req = txtRequest.getText();
+        
+        List<String> res = api.sendData(url, method, req);
+        
+        try{
+            JSONObject json = new JSONObject(res.get(1));
+            
+            txtResponse.setText(json.toString(8));
+            lblStatus.setText(res.get(0));
+        }catch (JSONException ex) {
+            Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
+            txtResponse.setText(res.get(1));
+            lblStatus.setText(res.get(0));
+            JOptionPane.showMessageDialog(null, res.get(1), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_btnSendActionPerformed
+
+    private void lblBeautifyMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblBeautifyMouseReleased
+        try{
+            JSONObject json = new JSONObject(txtRequest.getText());
+            txtRequest.setText(json.toString(8));
+        }catch (JSONException ex){
+            Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_lblBeautifyMouseReleased
+
+    private void txtRequestKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtRequestKeyPressed
+    }//GEN-LAST:event_txtRequestKeyPressed
 
     /**
      * @param args the command line arguments
@@ -224,10 +299,11 @@ public class MainForm extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JLabel lblBeautify;
+    private javax.swing.JLabel lblStatus;
     private javax.swing.JRadioButton rbtnAuthorization;
     private javax.swing.JTextArea txtRequest;
     private javax.swing.JTextArea txtResponse;
