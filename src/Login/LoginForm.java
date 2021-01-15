@@ -8,16 +8,9 @@ package Login;
 import javax.swing.JOptionPane;
 import java.awt.Toolkit;
 import java.awt.event.WindowEvent;
-import java.io.IOException;
-import okhttp3.MediaType;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
-import okhttp3.RequestBody;
 import org.json.JSONObject;
 
 import Main.MainForm;
-import okio.Buffer;
 import org.json.JSONException;
 /**
  *
@@ -29,10 +22,7 @@ public class LoginForm extends javax.swing.JFrame {
      * Creates new form LoginForm
      */
     
-    public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
-    OkHttpClient client = new OkHttpClient();
-
-
+    AuthApi api = new AuthApi();
     
     public LoginForm() {
         initComponents();
@@ -170,38 +160,6 @@ public class LoginForm extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private static String bodyToString(final Request request){
-        try {
-            Request copy = request.newBuilder().build();
-            Buffer buffer = new Buffer();
-            copy.body().writeTo(buffer);
-            return buffer.readUtf8();
-        } catch (final IOException e) {
-            return "did not work";
-        }
-    }
-    
-    private String postLogin(String url, String user, String pass) {
-        try{
-           String payload = String.format("{\"user_mail_phone\":\"%s\",\"password\":\"%s\"}", user, pass);
-
-           RequestBody body = RequestBody.create(JSON, payload);  
-           Request request = new Request.Builder()
-                   .url(url)
-                   .post(body)
-                   .build();
-
-           System.out.println(bodyToString(request));
-
-           Response response = client.newCall(request).execute();
-
-           return response.body().string();
-        }catch (IOException ex){
-            ex.printStackTrace();
-            JOptionPane.showMessageDialog(null, ex, "Login Failed", JOptionPane.ERROR_MESSAGE);
-            return null;
-        }
-    }
     
     private void btnExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExitActionPerformed
         int ans = JOptionPane.showOptionDialog(this, 
@@ -223,10 +181,9 @@ public class LoginForm extends javax.swing.JFrame {
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
         String username = txtUser.getText();
         String password = txtPass.getText();
-                
-        try{
-            String res = postLogin("http://localhost:9000/api/v1/user/sign-in", username, password);
 
+        String res = api.authentication(username, password);
+        try{
             JSONObject Jobject = new JSONObject(res);
             
             if(Jobject.getInt("code") == 0){
@@ -234,7 +191,7 @@ public class LoginForm extends javax.swing.JFrame {
                 txtPass.setText("");
                 systemExit();
 
-//                this.setVisible(false);
+                this.setVisible(false);
 
                 MainForm homePage = new MainForm();
                 homePage.setVisible(true);
@@ -244,8 +201,8 @@ public class LoginForm extends javax.swing.JFrame {
                 txtPass.setText("");
             }
         }catch (JSONException e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(null, e.getMessage(), "Login Failed", JOptionPane.ERROR_MESSAGE);
+            System.out.println(e.getMessage());
+            JOptionPane.showMessageDialog(null, res, "Login Failed", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btnLoginActionPerformed
 
@@ -277,10 +234,8 @@ public class LoginForm extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new LoginForm().setVisible(true);
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            new LoginForm().setVisible(true);
         });
     }
     
