@@ -5,11 +5,11 @@
  */
 package Main;
 
-import java.io.IOException;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.swing.table.TableColumn;
 import org.json.*;
 /**
  *
@@ -25,6 +25,11 @@ public class MainForm extends javax.swing.JFrame {
     
     public MainForm() {
         initComponents();
+        TableColumn column1 = tblHeader.getColumnModel().getColumn(0);
+        TableColumn column2 = tblHeader.getColumnModel().getColumn(1);
+
+        column1.setPreferredWidth(100);
+        column2.setPreferredWidth(150);
     }
 
     /**
@@ -52,6 +57,9 @@ public class MainForm extends javax.swing.JFrame {
         jScrollPane4 = new javax.swing.JScrollPane();
         txtResponse = new javax.swing.JTextArea();
         lblStatus = new javax.swing.JLabel();
+        rbtnHeader = new javax.swing.JRadioButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tblHeader = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Rest Client Apps");
@@ -72,6 +80,7 @@ public class MainForm extends javax.swing.JFrame {
         jLabel1.setText("Rest Client");
 
         txtUrl.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        txtUrl.setText("http://localhost:9000/api/v1");
         txtUrl.setAlignmentX(2.0F);
 
         cbMethod.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
@@ -86,7 +95,9 @@ public class MainForm extends javax.swing.JFrame {
         });
 
         txtToken.setColumns(20);
+        txtToken.setLineWrap(true);
         txtToken.setRows(5);
+        txtToken.setWrapStyleWord(true);
         jScrollPane2.setViewportView(txtToken);
 
         txtRequest.setColumns(20);
@@ -123,60 +134,91 @@ public class MainForm extends javax.swing.JFrame {
         txtResponse.setLineWrap(true);
         txtResponse.setRows(5);
         txtResponse.setWrapStyleWord(true);
+        txtResponse.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
         jScrollPane4.setViewportView(txtResponse);
 
         lblStatus.setFont(new java.awt.Font("Dialog", 3, 11)); // NOI18N
         lblStatus.setText("  ");
         lblStatus.setToolTipText("");
 
+        rbtnHeader.setText("Headers");
+
+        tblHeader.setAutoCreateRowSorter(true);
+        tblHeader.setFont(new java.awt.Font("Tahoma", 3, 12)); // NOI18N
+        tblHeader.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {"Content-Type", "application/json"},
+                {"", ""},
+                {null, null}
+            },
+            new String [] {
+                "KEY", "VALUE"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.String.class
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+        });
+        tblHeader.setCellSelectionEnabled(true);
+        tblHeader.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        tblHeader.setOpaque(false);
+        tblHeader.setRowHeight(20);
+        jScrollPane1.setViewportView(tblHeader);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGap(61, 61, 61)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(61, 61, 61)
-                        .addComponent(jLabel1))
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                            .addGap(110, 110, 110)
-                            .addComponent(cbMethod, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(txtUrl)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(btnSend, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                            .addGap(76, 76, 76)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jLabel2)
-                                    .addComponent(rbtnAuthorization))
-                                .addGroup(layout.createSequentialGroup()
-                                    .addGap(30, 30, 30)
-                                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 281, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addGap(54, 54, 54)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 375, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGroup(layout.createSequentialGroup()
-                                    .addComponent(jLabel3)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(lblBeautify)))
-                            .addGap(68, 68, 68)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addGroup(layout.createSequentialGroup()
-                                    .addComponent(jLabel4)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(lblStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 390, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                .addContainerGap(399, Short.MAX_VALUE))
+                        .addComponent(jLabel1)
+                        .addContainerGap(1535, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(cbMethod, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtUrl, javax.swing.GroupLayout.PREFERRED_SIZE, 935, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnSend, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(358, 358, 358))))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(91, 91, 91)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(rbtnHeader)
+                    .addComponent(rbtnAuthorization)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(21, 21, 21)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 281, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel2)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 281, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addGap(54, 54, 54)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(lblBeautify))
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 375, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(54, 54, 54)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel4)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(lblStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 390, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(24, 24, 24)
                 .addComponent(jLabel1)
-                .addGap(37, 37, 37)
+                .addGap(25, 25, 25)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtUrl, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(cbMethod, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -184,22 +226,27 @@ public class MainForm extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(28, 28, 28)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lblBeautify)
+                            .addComponent(jLabel4)
+                            .addComponent(lblStatus))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 466, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(rbtnHeader)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(rbtnAuthorization)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel3)
-                            .addComponent(lblBeautify)
-                            .addComponent(rbtnAuthorization)
-                            .addComponent(jLabel4)
-                            .addComponent(lblStatus))
+                        .addComponent(jLabel3)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 466, Short.MAX_VALUE)
-                            .addComponent(jScrollPane3))))
-                .addContainerGap(25, Short.MAX_VALUE))
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 466, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(49, Short.MAX_VALUE))
         );
 
         pack();
@@ -222,24 +269,45 @@ public class MainForm extends javax.swing.JFrame {
             System.exit(0);
         }
     }//GEN-LAST:event_formWindowClosing
-
+        
     private void btnSendActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSendActionPerformed
-        String method = (String)cbMethod.getSelectedItem();
-        String url = txtUrl.getText();
-        String req = txtRequest.getText();
-        
-        List<String> res = api.sendData(url, method, req);
-        
-        try{
-            JSONObject json = new JSONObject(res.get(1));
+        try{                                        
+            String url = txtUrl.getText();
+            String token = txtToken.getText();
+            String method = (String)cbMethod.getSelectedItem();
+            String req = txtRequest.getText();
             
-            txtResponse.setText(json.toString(8));
-            lblStatus.setText(res.get(0));
+            Boolean isAuth = rbtnAuthorization.isSelected();
+            Boolean isAddHeader = rbtnHeader.isSelected();
+            
+            JSONObject jsonHeader = new JSONObject();
+            
+            for (int i= 0; i< tblHeader.getRowCount(); i++){
+                if(tblHeader.getValueAt(i, 0) != null && tblHeader.getValueAt(i, 1) != null && !"".equals(String.valueOf(tblHeader.getValueAt(i, 0) )) && !"".equals(String.valueOf(tblHeader.getValueAt(i, 1)))){
+                    try {
+                        jsonHeader.put((String) tblHeader.getValueAt(i, 0), tblHeader.getValueAt(i, 1));
+                    } catch (JSONException ex) {
+                        Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }
+            
+//            sendData(url, isAuth, token, isAddHeader, jsonHeader,  method, req);
+            List<String> res = api.sendData(url, isAuth, token, isAddHeader, jsonHeader,  method, req);
+            
+            try{
+                JSONObject json = new JSONObject(res.get(1));
+                
+                txtResponse.setText(json.toString(8));
+                lblStatus.setText(res.get(0));
+            }catch (JSONException ex) {
+                Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
+                txtResponse.setText(res.get(1));
+                lblStatus.setText(res.get(0));
+                JOptionPane.showMessageDialog(null, res.get(1), "Error", JOptionPane.ERROR_MESSAGE);
+            }
         }catch (JSONException ex) {
             Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
-            txtResponse.setText(res.get(1));
-            lblStatus.setText(res.get(0));
-            JOptionPane.showMessageDialog(null, res.get(1), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btnSendActionPerformed
 
@@ -298,12 +366,15 @@ public class MainForm extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JLabel lblBeautify;
     private javax.swing.JLabel lblStatus;
     private javax.swing.JRadioButton rbtnAuthorization;
+    private javax.swing.JRadioButton rbtnHeader;
+    private javax.swing.JTable tblHeader;
     private javax.swing.JTextArea txtRequest;
     private javax.swing.JTextArea txtResponse;
     private javax.swing.JTextArea txtToken;
