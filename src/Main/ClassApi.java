@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.util.*;
 import okhttp3.*;
 import okio.Buffer;
+import org.json.*;
 
 import Login.AuthApi;
 
@@ -21,7 +22,7 @@ public class ClassApi {
     public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
     OkHttpClient client = new OkHttpClient();
 
-    AuthApi auth = new AuthApi();
+    AuthApi authapi = new AuthApi();
     
     
     public static List<String> responseList(int code, String status, String response) 
@@ -31,22 +32,40 @@ public class ClassApi {
     } 
 
     
-    public List<String> sendData(String url, String method, String payload){
+    private Request buildRequestWithHeader (String url, Boolean auth, String token, Boolean addHeader, JSONObject header, String method, RequestBody body) throws JSONException{
+        Request.Builder request = new Request.Builder();
+        
+        if(addHeader && header.length() > 0){
+            for(int i = 0; i<header.names().length(); i++){
+                request.addHeader(header.names().getString(i), (String) header.get(header.names().getString(i)));                    
+            }
+        }
+        
+        if(auth){
+            request.addHeader("Authorization", "Bearer " + token);
+        }
+        
+        return request
+                .url(url)
+                .method(method, body)
+                .build();
+    }
+    
+    
+    public List<String> sendData(String url, Boolean auth, String token, Boolean addHeader, JSONObject header, String method, String payload) throws JSONException{
         try{
             RequestBody body;
             
-            if(method == "GET" || method == "DELETE"){
+            if("GET".equals(method) || "DELETE".equals(method)){
                 body = null;
             }else{
                 body = RequestBody.create(JSON, payload);
             }
         
-            Request request = new Request.Builder()
-                    .url(url)
-                    .method(method, body)
-                    .build();
+            Request request = buildRequestWithHeader(url, auth, token, addHeader, header, method, body);
             
             Response response = client.newCall(request).execute();
+//            response.close();
             
             List<String> res = responseList(response.code(), response.message(), response.body().string());
             return res;
