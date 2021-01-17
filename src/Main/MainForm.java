@@ -7,7 +7,6 @@ package Main;
 
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
@@ -279,7 +278,7 @@ public class MainForm extends javax.swing.JFrame {
     }//GEN-LAST:event_formWindowClosing
         
     private void btnSendActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSendActionPerformed
-//        try{                                        
+        try{                                        
             String url = txtUrl.getText();
             String token = txtToken.getText();
             String method = (String)cbMethod.getSelectedItem();
@@ -300,23 +299,22 @@ public class MainForm extends javax.swing.JFrame {
                 }
             }
             
-//            List<String> res = api.sendData(url, isAuth, token, isAddHeader, jsonHeader,  method, req);
-//            
-//            try{
-//                JSONObject json = new JSONObject(res.get(1));
-//                
-//                txtResponse.setText(json.toString(8));
-//                lblStatus.setText(res.get(0));
-//            }catch (JSONException ex) {
-//                Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
-//                txtResponse.setText(res.get(1));
-//                lblStatus.setText(res.get(0));
-//                JOptionPane.showMessageDialog(null, res.get(1), "Error", JOptionPane.ERROR_MESSAGE);
-//            }
-            writeLog("NMN");
-//        }catch (JSONException ex) {
-//            Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
-//        }
+            List<String> res = api.sendData(url, isAuth, token, isAddHeader, jsonHeader,  method, req);
+            
+            try{
+                JSONObject json = new JSONObject(res.get(1));
+                
+                txtResponse.setText(json.toString(8));
+                lblStatus.setText(res.get(0));
+            }catch (JSONException ex) {
+                Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
+                txtResponse.setText(res.get(1));
+                lblStatus.setText(res.get(0));
+                JOptionPane.showMessageDialog(null, res.get(1), "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }catch (JSONException ex) {
+            Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_btnSendActionPerformed
 
     private void lblBeautifyMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblBeautifyMouseReleased
@@ -333,12 +331,10 @@ public class MainForm extends javax.swing.JFrame {
     }//GEN-LAST:event_txtRequestKeyPressed
 
     
-    public void writeLog(String msg){
+    public static void writeLog(String msg){
         try{
             LocalDateTime now = LocalDateTime.now();
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyyMMdd");
-
-            System.out.println(dtf.format(now));
 
             String directoryName = "D:\\NetBeans\\JavaAPI\\AppLog";
             String fileName = "LOG " + dtf.format(now) + ".txt";
@@ -355,9 +351,6 @@ public class MainForm extends javax.swing.JFrame {
                     bw.write(DateTimeFormatter.ofPattern("yyyyMMdd HH:mm:ss").format(now) + " : " + msg + "\n");
                     bw.close();
                 }
-//                BufferedWriter bw = new BufferedWriter(fileWritter);
-//                bw.write(DateTimeFormatter.ofPattern("yyyyMMdd HH:mm:ss").format(now) + " : " + msg + "\n");
-//                bw.close();
             }else{
                 if(!file.exists()) {
                     file.createNewFile();
@@ -368,9 +361,6 @@ public class MainForm extends javax.swing.JFrame {
                     bw.write(DateTimeFormatter.ofPattern("yyyyMMdd HH:mm:ss").format(now) + " : " + msg + "\n");
                     bw.close();
                 }
-//                BufferedWriter bw = new BufferedWriter(fileWritter);
-//                bw.write(DateTimeFormatter.ofPattern("yyyyMMdd HH:mm:ss").format(now) + " : " + msg + "\n");
-//                bw.close();
             }
         }catch (IOException ex){
             System.out.println(ex.getMessage());
