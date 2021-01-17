@@ -8,6 +8,7 @@ package Login;
 import java.io.IOException;
 import okhttp3.*;
 import okio.Buffer;
+//import Main.MainForm;
 
 /**
  *
@@ -17,7 +18,6 @@ public class AuthApi {
     
     public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
     OkHttpClient client = new OkHttpClient();
-
     
     public String authentication(String user, String pass){
         try{
@@ -36,6 +36,8 @@ public class AuthApi {
            System.out.println(response.code() + " " + response.message());
            System.out.println("Headers : " + response.headers());
            System.out.println("Request : " + response.request());
+//           MainForm.writeLog(response.request().url() + "|" + response.request().headers().toString() + "|" + response.request().method() + "|" + bodyToString(request));
+//           MainForm.writeLog(response.code() + " " + response.message() + "|" + response.body().string());
            return response.body().string();
         }catch (IOException ex){
             return ex.getMessage();

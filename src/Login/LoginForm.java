@@ -6,7 +6,6 @@
 package Login;
 
 import javax.swing.JOptionPane;
-import java.awt.Toolkit;
 import java.awt.event.WindowEvent;
 import org.json.*;
 
@@ -22,6 +21,8 @@ public class LoginForm extends javax.swing.JFrame {
      */
     
     AuthApi api = new AuthApi();
+    MainForm homePage = new MainForm();
+
     
     public LoginForm() {
         initComponents();
@@ -47,6 +48,11 @@ public class LoginForm extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowOpened(java.awt.event.WindowEvent evt) {
+                formWindowOpened(evt);
+            }
+        });
 
         jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 30));
 
@@ -168,6 +174,7 @@ public class LoginForm extends javax.swing.JFrame {
                     JOptionPane.QUESTION_MESSAGE, null, null, null);
     
         if(ans == JOptionPane.YES_OPTION){
+            MainForm.writeLog("Exit");
             System.exit(0);
         }
     }//GEN-LAST:event_btnExitActionPerformed
@@ -175,9 +182,13 @@ public class LoginForm extends javax.swing.JFrame {
     private void btnResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnResetActionPerformed
         txtUser.setText("");
         txtPass.setText("");
+        
+        MainForm.writeLog("Reset form login");
     }//GEN-LAST:event_btnResetActionPerformed
 
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
+        MainForm.writeLog("Login");
+        
         String username = txtUser.getText();
         String password = txtPass.getText();
 
@@ -192,7 +203,6 @@ public class LoginForm extends javax.swing.JFrame {
 
                 this.setVisible(false);
 
-                MainForm homePage = new MainForm();
                 homePage.setVisible(true);
             }else{
                 JOptionPane.showMessageDialog(null, Jobject.getString("message"), "Login Failed", JOptionPane.ERROR_MESSAGE);
@@ -204,6 +214,10 @@ public class LoginForm extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, res, "Login Failed", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btnLoginActionPerformed
+
+    private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
+//        this.setVisible(false);
+    }//GEN-LAST:event_formWindowOpened
 
     /**
      * @param args the command line arguments
