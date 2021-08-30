@@ -17,15 +17,18 @@ import okio.Buffer;
 public class AuthApi {
     
     public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+    public static String BASE_URL = "";
+    
     OkHttpClient client = new OkHttpClient();
     
     public String authentication(String user, String pass){
         try{
+                       System.out.println("BASE_URL :" + BASE_URL);
            String payload = String.format("{\"user_mail_phone\":\"%s\",\"password\":\"%s\"}", user, pass);
 
            RequestBody body = RequestBody.create(JSON, payload);  
            Request request = new Request.Builder()
-                   .url("http://localhost:9000/api/v1/user/sign-in")
+                   .url(BASE_URL + "/api/v1/user/sign-in")
                    .method("POST", body)
                    .build();
 
