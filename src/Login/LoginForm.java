@@ -10,6 +10,16 @@ import java.awt.event.WindowEvent;
 import org.json.*;
 
 import Main.MainForm;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.net.URI;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.List;
+import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 /**
  *
  * @author user
@@ -25,7 +35,9 @@ public class LoginForm extends javax.swing.JFrame {
 
     
     public LoginForm() {
-        initComponents();
+        initComponents();      
+        
+        testReadFile();
     }
 
     /**
@@ -184,6 +196,7 @@ public class LoginForm extends javax.swing.JFrame {
         txtPass.setText("");
         
         MainForm.writeLog("Reset form login");
+        testReadFile();
     }//GEN-LAST:event_btnResetActionPerformed
 
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
@@ -206,11 +219,14 @@ public class LoginForm extends javax.swing.JFrame {
                 homePage.setVisible(true);
             }else{
                 JOptionPane.showMessageDialog(null, Jobject.getString("message"), "Login Failed", JOptionPane.ERROR_MESSAGE);
+                MainForm.writeLog(Jobject.getString("message"));
+
                 txtUser.setText("");
                 txtPass.setText("");
             }
         }catch (JSONException e) {
             System.out.println(e.getMessage());
+            MainForm.writeLog(res);
             JOptionPane.showMessageDialog(null, res, "Login Failed", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btnLoginActionPerformed
@@ -219,6 +235,36 @@ public class LoginForm extends javax.swing.JFrame {
 //        this.setVisible(false);
     }//GEN-LAST:event_formWindowOpened
 
+    
+    private void testReadFile(){
+        try {
+            String projectPath = System.getProperty("user.dir");
+//            File myObj = new File(projectPath + "/config.ini");
+//            Scanner myReader = new Scanner(myObj);
+//            while (myReader.hasNextLine()) {
+//              String data = myReader.nextLine();
+//              MainForm.writeLog(data);
+//              JOptionPane.showMessageDialog(null, data, "Login Failed", JOptionPane.ERROR_MESSAGE);              
+//              System.out.println(data);
+//            }
+//            myReader.close();
+            List<String> lines = Files.readAllLines(Paths.get(projectPath + "/config.ini"));
+            System.out.println(lines.get(0).split("=")[1]);
+            System.out.println(lines.get(1).split("=")[1]);
+            System.out.println(lines.get(2).split("=")[1]);
+            System.out.println(lines.get(3).split("=")[1]);
+            
+            AuthApi.BASE_URL = lines.get(4).split("=")[1];
+
+        } catch (FileNotFoundException e) {
+            MainForm.writeLog(e.getMessage());
+            System.out.println(e.getMessage());
+            JOptionPane.showMessageDialog(null, e.getMessage(), "Login Failed", JOptionPane.ERROR_MESSAGE);
+       } catch (IOException ex) {
+            Logger.getLogger(LoginForm.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
     /**
      * @param args the command line arguments
      */
