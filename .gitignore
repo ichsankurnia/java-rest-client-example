@@ -32,3 +32,5 @@ nbdist/
 .nb-gradle/
 
 AppLog/
+
+config.ini
